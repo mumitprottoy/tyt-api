@@ -65,6 +65,7 @@ def create_user(form_data: dict, csrf=True) -> tuple[bool, str]:
             
             return {
                 "created": True,
+                "user_id": new_user.id
             }
         
         else: 
@@ -84,28 +85,38 @@ def create_user(form_data: dict, csrf=True) -> tuple[bool, str]:
  
  # login
  
-def authenticate_user(request, form_data: dict) -> tuple[bool, str]:
+def authenticate_user(form_data: dict, csrf=True) -> tuple[bool, str]:
     form_data = get_rid_of_list_type_values(form_data)
-    status = form_fields_are_valid(inputs=list(form_data.keys()), fields=ff['signin'])
+    status = form_fields_are_valid(inputs=list(form_data.keys()), fields=ff['signin'], csrf=csrf)
     
     if status[0]:
-        from .entrance_operations import identify_user_or_email
-        
-        identified = identify_user_or_email(form_data['username_or_email'], User)
+        from .entrance_operations import identify_username_or_email
+        identified = identify_username_or_email(form_data['username_or_email'], User)
         
         if identified[0]:
             user = User.objects.get(**identified[1])
             creds = {'username': user.username, 'password': form_data['password']}
-        else: return False, ["invalid username or email."]
-        
-        
-        from django.contrib.auth import authenticate, login
-        if authenticate(**creds):
-            login(request, user)
+        else: 
+            return {
+                "authenticated": False,
+                "errors": ["invalid username or email."]
+            }
             
-            return True, None
         
-        else: return False, ['Wrong password.'], {'username': user.username}
+        from django.contrib.auth import authenticate
+        if authenticate(**creds):
+            return {
+                "authenticated": True,
+                "user_id": user.id
+            }
+        else: 
+            return {
+                "authenticated": False,
+                "errors": ['Wrong password.'] 
+            }
     
-    return status
+    return {
+        "authenticated": False,
+        "errors": status[1]
+    }
             

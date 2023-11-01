@@ -15,7 +15,7 @@ def filter_names(names: list) -> list:
 
 
 
-def identify_user_or_email(cred:str, UserClass):
+def identify_username_or_email(cred:str, UserClass):
     username, email = {"username": cred}, {"email": cred}
     
     if UserClass.objects.filter(**username).exists():
