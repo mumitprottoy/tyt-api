@@ -1,13 +1,13 @@
 import os
 import json
 from django.http import HttpResponse, JsonResponse
-from tools.variables import (
+from .variables import (
     HTTP_RESPS,
     JSON_MSG
 )
 
 
-# These endpoints can only be accessed with a private token
+# Enpoints wrapped with this decorator can only be accessed with a private token
 def private(endpoint):
     
     def check(request, *args, **kwargs):
@@ -15,6 +15,7 @@ def private(endpoint):
         if not request.body:
             return HttpResponse(HTTP_RESPS['private'])
         
+        # decode and convert into dict
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         

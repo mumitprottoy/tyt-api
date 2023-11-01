@@ -1,9 +1,7 @@
+def passes_check_list(check_list: tuple[bool, str]) -> tuple[bool, str]:
+    issues = list()
+    for check in check_list:
+        if not check[0]: issues.append(check)
+    
 
-# sets the first element of the list type value to each respective key 
-def get_rid_of_list_type_values(form_data: dict) -> dict:
-    
-    for key in form_data.keys():
-        if type(form_data[key]) is list:
-            form_data[key] = form_data[key][0]
-    
-    return form_data 
+    return (True, None) if not issues else (False, issues)

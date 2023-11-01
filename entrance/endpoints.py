@@ -1,8 +1,18 @@
-from django.http import HttpResponse
-from tools.global_decorators import private
 import json
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from tools.global_decorators import private
+from .program_interface import create_user
 
+
+
+@csrf_exempt
 @private
-def create_user(request, *args, **kwargs):
-    body_unicode = request.body
+def user_creation(request, *args, **kwargs):
+    body = kwargs['body']
+    response = create_user(body['data'], csrf=body['csrf'])
+    return JsonResponse(response) 
+    
+
+
         
