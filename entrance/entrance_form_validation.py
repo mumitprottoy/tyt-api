@@ -7,7 +7,7 @@ def validate_creds_from_signup_form(UserClass, passes_check_list, username: str,
         
         ( not UserClass.objects.filter(username=username).exists(), "Username already exists.", "username" ),
         
-        ( len(username) in range(3,13), "Username must be within 3 to 12 characters.", "username" ),
+        ( len(username) in range(4,13), "Username must be within 4 to 12 characters.", "username" ),
         
         ( not UserClass.objects.filter(email=email).exists(), "Email already exists.", "email" ),
         
