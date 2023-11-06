@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     
     # internals
     'entrance',
-    'therapist',
+    'therapists',
     
     # externals
     'corsheaders',
